@@ -6,5 +6,13 @@ defmodule WordCount do
   """
   @spec count(String.t()) :: map
   def count(sentence) do
+    sentence
+
+    |> String.split(~r{(\\n|[^\w'])+})
+    |> Enum.filter(fn removeWhiteSpaces -> removeWhiteSpaces != "" end)
+
+    |> Enum.reduce(%{}, fn word, countWord -> countWord
+    |> Map.put_new(word, 0)
+    |> Map.update(word, 1, &(&1+1)) end)
   end
 end
