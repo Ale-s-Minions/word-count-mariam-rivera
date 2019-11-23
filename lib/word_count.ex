@@ -4,15 +4,13 @@ defmodule WordCount do
 
   Words are compared case-insensitively.
   """
-  @spec count(String.t()) :: map
+  @spec count(String.t) :: map
   def count(sentence) do
-    sentence
+    words = String.replace(sentence, ~r/@|#|\$|%|&|\^|:|_|!|,/u, " ")
+    |> String.split()
 
-    |> String.split(~r{(\\n|[^\w'])+})
-    |> Enum.filter(fn removeWhiteSpaces -> removeWhiteSpaces != "" end)
-
-    |> Enum.reduce(%{}, fn word, countWord -> countWord
-    |> Map.put_new(word, 0)
-    |> Map.update(word, 1, &(&1+1)) end)
+    Enum.reduce words, %{}, fn word, counts ->
+      word = String.downcase word
+      Map.update counts, word, 1,&(&1 + 1) end
   end
 end
